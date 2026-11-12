@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ภารกิจพิชิตไวยากรณ์จีน: 几乎 vs 差不多</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Prompt (Thai) & Noto Sans SC (Simplified Chinese) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@500;700;900&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- QRCode.js for generating scannable QR Codes for Canva -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  
+  <!-- Canvas Confetti for celebratory effects -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Prompt', sans-serif;
+      background-color: #F8FAFC;
+      background-image: radial-gradient(#CBD5E1 1px, transparent 1px);
+      background-size: 24px 24px;
+      color: #1E293B;
+      overflow-x: hidden;
+    }
+
+    .zh {
+      font-family: 'Noto Sans SC', sans-serif;
+    }
+
+    /* Custom Animations */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+    .animate-shake {
+      animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes pulse-fast {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+    .animate-pulse-fast {
+      animation: pulse-fast 0.6s infinite;
+    }
+
+    @keyframes float-up {
+      0% { opacity: 0; transform: translateY(12px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .animate-float-up {
+      animation: float-up 0.35s ease-out forwards;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F1F5F9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- ==================== HEADER ==================== -->
+  <header class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <!-- Logo & Title -->
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-orange-500 flex items-center justify-center text-white font-bold text-xl shadow-md shrink-0 zh">
+          中文
+        </div>
+        <div>
+          <h1 class="text-base sm:text-xl font-bold text-slate-800 leading-tight">
+            ภารกิจพิชิตไวยากรณ์จีน
+          </h1>
+          <div class="flex items-center gap-2 text-xs sm:text-sm font-semibold">
+            <span class="text-blue-600 zh font-bold">几乎 (jīhū)</span>
+            <span class="text-slate-400">VS</span>
+            <span class="text-orange-600 zh font-bold">差不多 (chàbuduō)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons (Sound & QR Code Share) -->
+      <div class="flex items-center gap-2">
+        <button id="soundToggleBtn" onclick="toggleSound()" title="เปิด/ปิดเสียง" class="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition active:scale-95 flex items-center justify-center">
+          <span id="soundIcon" class="text-lg">🔊</span>
+        </button>
+        <button onclick="openQrModal()" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-semibold shadow-sm transition active:scale-95 flex items-center gap-1.5">
+          <span>📱</span>
+          <span>QR Code ขึ้นสไลด์</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="max-w-5xl mx-auto px-4 pb-3 pt-1">
+      <div class="grid grid-cols-3 gap-2 bg-slate-100 p-1.5 rounded-2xl">
+        <button id="tab-cheatsheet" onclick="switchMode('cheatsheet')" class="nav-tab py-2.5 px-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 bg-white text-indigo-700 shadow-sm">
+          <span class="text-base sm:text-lg">📖</span>
+          <span>1. สรุปสูตรจำไว</span>
+        </button>
+        <button id="tab-bomb" onclick="switchMode('bomb')" class="nav-tab py-2.5 px-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 text-slate-600 hover:text-slate-900">
+          <span class="text-base sm:text-lg">💣</span>
+          <span>2. เกมกู้ระเบิด</span>
+        </button>
+        <button id="tab-sort" onclick="switchMode('sort')" class="nav-tab py-2.5 px-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 text-slate-600 hover:text-slate-900">
+          <span class="text-base sm:text-lg">🗂️</span>
+          <span>3. เกมแยกกล่อง</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ==================== MAIN CONTENT ==================== -->
+  <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-6">
+
+    <!-- ==================== MODE 1: QUICK CHEAT SHEET ==================== -->
+    <section id="mode-cheatsheet" class="animate-float-up space-y-6">
+      <div class="text-center max-w-2xl mx-auto">
+        <span class="inline-block px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-xs font-semibold mb-2">ทบทวนก่อนลงสนาม</span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-slate-800">แยกให้ออก! ใช้ต่างกันตรงไหน?</h2>
+        <p class="text-slate-600 text-sm sm:text-base mt-1">จำรหัสสีประจำตัวให้แม่น แล้วไปลุยเกมกันเลย!</p>
+      </div>
+
+      <!-- 3 Color-Coded Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        
+        <!-- Card 1: 几乎 (Blue) -->
+        <div class="bg-white rounded-3xl border-2 border-blue-200 shadow-md overflow-hidden flex flex-col">
+          <div class="bg-blue-600 text-white p-5 text-center">
+            <span class="inline-block px-2.5 py-0.5 bg-blue-500 rounded-full text-xs font-medium mb-1">คำวิเศษณ์ (副词) เท่านั้น</span>
+            <h3 class="text-3xl font-black zh tracking-wide">几乎</h3>
+            <p class="text-blue-100 text-sm font-medium mt-0.5">jīhū • "เกือบจะ..."</p>
+          </div>
+          <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+            <div class="space-y-3 text-sm">
+              <div class="bg-blue-50 p-3 rounded-2xl border border-blue-100">
+                <p class="font-bold text-blue-800 mb-1">🎯 จุดเด่นที่ 差不多 ทำไม่ได้:</p>
+                <ul class="list-disc list-inside text-slate-700 space-y-1">
+                  <li>วางหน้า <strong>所有 / 全部 / 每个人</strong> (เกือบทั้งหมด)</li>
+                  <li>วางหน้า <strong>คำบอกความถี่</strong> เช่น 每天 (เกือบทุกวัน)</li>
+                  <li>สื่อถึงเรื่อง <strong>เฉียดฉิว / หวุดหวิด</strong> ที่ไม่อยากให้เกิด</li>
+                </ul>
+              </div>
+              <div>
+                <p class="text-xs font-semibold text-slate-400 uppercase mb-1">ตัวอย่างประโยค</p>
+                <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                  <p class="zh font-bold text-base text-slate-800">他<span class="text-blue-600 underline decoration-2">几乎</span>每天都去图书馆。</p>
+                  <p class="text-xs text-slate-500">Tā jīhū měitiān dōu qù túshūguǎn.</p>
+                  <p class="text-xs text-slate-700 mt-1">เขาไปห้องสมุด<span class="font-semibold text-blue-600">เกือบ</span>ทุกวันเลย</p>
+                </div>
+              </div>
+            </div>
+            <div class="text-center pt-2 border-t border-slate-100">
+              <span class="text-xs font-bold text-red-500">❌ ห้ามวางไว้ท้ายประโยคเด็ดขาด!</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: 差不多 (Orange) -->
+        <div class="bg-white rounded-3xl border-2 border-orange-200 shadow-md overflow-hidden flex flex-col">
+          <div class="bg-orange-600 text-white p-5 text-center">
+            <span class="inline-block px-2.5 py-0.5 bg-orange-500 rounded-full text-xs font-medium mb-1">คุณศัพท์ (形容词) & วิเศษณ์</span>
+            <h3 class="text-3xl font-black zh tracking-wide">差不多</h3>
+            <p class="text-orange-100 text-sm font-medium mt-0.5">chàbuduō • "พอๆ กัน / ใกล้เคียง"</p>
+          </div>
+          <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+            <div class="space-y-3 text-sm">
+              <div class="bg-orange-50 p-3 rounded-2xl border border-orange-100">
+                <p class="font-bold text-orange-800 mb-1">🎯 จุดเด่นที่ 几乎 ทำไม่ได้:</p>
+                <ul class="list-disc list-inside text-slate-700 space-y-1">
+                  <li><strong>วางท้ายประโยคได้!</strong> (เป็นภาคแสดง)</li>
+                  <li>ใช้เปรียบเทียบ <span class="zh font-semibold">A 跟 B 差不多</span></li>
+                  <li>ขยายคำนามได้ (เช่น <span class="zh">差不多的人</span>)</li>
+                </ul>
+              </div>
+              <div>
+                <p class="text-xs font-semibold text-slate-400 uppercase mb-1">ตัวอย่างประโยค</p>
+                <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                  <p class="zh font-bold text-base text-slate-800">这两个苹果的大小<span class="text-orange-600 underline decoration-2">差不多</span>。</p>
+                  <p class="text-xs text-slate-500">Zhè liǎng gè píngguǒ de dàxiǎo chàbuduō.</p>
+                  <p class="text-xs text-slate-700 mt-1">ขนาดของแอปเปิล 2 ลูกนี้<span class="font-semibold text-orange-600">พอๆ กัน</span></p>
+                </div>
+              </div>
+            </div>
+            <div class="text-center pt-2 border-t border-slate-100">
+              <span class="text-xs font-bold text-orange-600">✅ จบประโยคสวยๆ ต้องยกให้คำนี้!</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Both (Emerald Green) -->
+        <div class="bg-white rounded-3xl border-2 border-emerald-200 shadow-md overflow-hidden flex flex-col">
+          <div class="bg-emerald-600 text-white p-5 text-center">
+            <span class="inline-block px-2.5 py-0.5 bg-emerald-500 rounded-full text-xs font-medium mb-1">พื้นที่ทับซ้อน (ใช้แทนกันได้)</span>
+            <h3 class="text-2xl sm:text-3xl font-black tracking-wide">ใช้ได้ทั้งคู่!</h3>
+            <p class="text-emerald-100 text-sm font-medium mt-0.5">几乎 = 差不多</p>
+          </div>
+          <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+            <div class="space-y-3 text-sm">
+              <div class="bg-emerald-50 p-3 rounded-2xl border border-emerald-100">
+                <p class="font-bold text-emerald-800 mb-1">🤝 ใช้แทนกันได้เมื่อวางหน้า:</p>
+                <ul class="list-disc list-inside text-slate-700 space-y-1">
+                  <li><strong>คำกริยา (Verb)</strong> เช่น เกือบลืม, เกือบสาย</li>
+                  <li><strong>คำคุณศัพท์ (Adj)</strong> เช่น สูงเกือบเท่ากัน</li>
+                  <li><strong>จำนวน/เวลา</strong> เช่น เกือบ 2 ชั่วโมง, เกือบ 100 คน</li>
+                </ul>
+              </div>
+              <div>
+                <p class="text-xs font-semibold text-slate-400 uppercase mb-1">ตัวอย่างประโยค</p>
+                <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                  <p class="zh font-bold text-base text-slate-800">我<span class="text-emerald-600 underline decoration-2">几乎 / 差不多</span>忘了。</p>
+                  <p class="text-xs text-slate-500">Wǒ jīhū / chàbuduō wàng le.</p>
+                  <p class="text-xs text-slate-700 mt-1">ฉัน<span class="font-semibold text-emerald-600">เกือบ</span>ลืมไปเลย (วางหน้ากริยา 忘了)</p>
+                </div>
+              </div>
+            </div>
+            <div class="text-center pt-2 border-t border-slate-100">
+              <span class="text-xs font-bold text-emerald-600">💡 หน้ากริยา & ตัวเลข ใช้ได้ทั้งคู่!</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA Button to Start Game -->
+      <div class="text-center pt-4">
+        <button onclick="switchMode('bomb')" class="px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-lg shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5 active:scale-95">
+          พร้อมแล้ว! ลุยเกมกู้ระเบิดไวยากรณ์ 💣➔
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================== MODE 2: GRAMMAR BOMB DEFUSAL QUIZ ==================== -->
+    <section id="mode-bomb" class="hidden animate-float-up max-w-2xl mx-auto">
+      
+      <!-- Start Screen for Bomb Game -->
+      <div id="bomb-start" class="bg-white rounded-3xl p-6 sm:p-10 shadow-lg border border-slate-200 text-center space-y-6">
+        <div class="w-20 h-20 mx-auto bg-red-100 rounded-full flex items-center justify-center text-5xl shadow-inner">
+          💣
+        </div>
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-800">ภารกิจกู้ระเบิดไวยากรณ์</h2>
+          <p class="text-slate-600 mt-2 text-sm sm:text-base">
+            ตัดสายชนวนให้ถูกเส้น! คุณมีเวลา <strong>15 วินาที</strong> ต่อข้อ เลือกเติมคำลงในช่องว่างให้ถูกต้องทั้งหมด 10 ข้อ
+          </p>
+        </div>
+        <div class="grid grid-cols-3 gap-2 text-xs sm:text-sm bg-slate-50 p-4 rounded-2xl border border-slate-100">
+          <div class="p-2">
+            <div class="font-bold text-blue-600 text-base zh">几乎</div>
+            <div class="text-slate-500">สายสีฟ้า</div>
+          </div>
+          <div class="p-2 border-x border-slate-200">
+            <div class="font-bold text-orange-600 text-base zh">差不多</div>
+            <div class="text-slate-500">สายสีส้ม</div>
+          </div>
+          <div class="p-2">
+            <div class="font-bold text-emerald-600 text-base">ใช้ได้ทั้งคู่</div>
+            <div class="text-slate-500">สายสีเขียว</div>
+          </div>
+        </div>
+        <button onclick="startBombGame()" class="w-full sm:w-auto px-10 py-4 rounded-2xl bg-red-600 hover:bg-red-700 text-white font-bold text-lg shadow-lg transition transform hover:scale-105 active:scale-95">
+          เริ่มจับเวลากู้ระเบิด! ⏱️
+        </button>
+      </div>
+
+      <!-- Active Gameplay Screen -->
+      <div id="bomb-play" class="hidden space-y-4">
+        <!-- Top Status Bar -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="px-3 py-1 rounded-xl bg-slate-100 font-bold text-slate-700 text-sm">
+              ข้อ <span id="bomb-q-num">1</span>/10
+            </span>
+            <span id="bomb-streak-badge" class="hidden px-2.5 py-1 rounded-xl bg-amber-100 text-amber-700 font-bold text-xs">
+              🔥 ตอบถูกติดกัน <span id="bomb-streak">0</span>!
+            </span>
+          </div>
+          
+          <!-- Timer Pill -->
+          <div id="bomb-timer-box" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-red-50 border border-red-200 text-red-600 font-extrabold text-base">
+            <span id="bomb-icon">💣</span>
+            <span id="bomb-timer">15</span>s
+          </div>
+
+          <div class="font-bold text-indigo-600 text-sm sm:text-base">
+            คะแนน: <span id="bomb-score">0</span>
+          </div>
+        </div>
+
+        <!-- Timer Progress Bar -->
+        <div class="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
+          <div id="bomb-progress-bar" class="h-full bg-gradient-to-r from-emerald-500 via-amber-500 to-red-600 transition-all duration-1000 ease-linear" style="width: 100%;"></div>
+        </div>
+
+        <!-- Question Card -->
+        <div id="bomb-card" class="bg-white rounded-3xl p-6 sm:p-8 shadow-md border border-slate-200 text-center space-y-4">
+          <p id="bomb-pinyin" class="text-slate-500 text-sm sm:text-base font-medium tracking-wide"></p>
+          
+          <h3 id="bomb-question" class="zh text-2xl sm:text-4xl font-bold text-slate-800 leading-relaxed py-2"></h3>
+          
+          <!-- Toggleable Thai Translation Hint -->
+          <div>
+            <button onclick="toggleHint()" id="bomb-hint-btn" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 bg-indigo-50 px-3 py-1.5 rounded-full transition">
+              💡 ดูคำแปลภาษาไทย (ตัวช่วย)
+            </button>
+            <p id="bomb-thai-hint" class="hidden text-sm text-slate-600 mt-2 bg-slate-50 py-2 px-4 rounded-xl border border-slate-100"></p>
+          </div>
+
+          <!-- 3 Wire Choices -->
+          <div id="bomb-options" class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4">
+            <button onclick="checkBombAnswer('jihu')" class="bomb-opt-btn py-4 px-4 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-md transition transform active:scale-95 flex flex-col items-center justify-center border-b-4 border-blue-800">
+              <span class="zh text-2xl">几乎</span>
+              <span class="text-xs text-blue-100 font-normal">jīhū</span>
+            </button>
+
+            <button onclick="checkBombAnswer('chabuduo')" class="bomb-opt-btn py-4 px-4 rounded-2xl bg-orange-600 hover:bg-orange-700 text-white font-bold shadow-md transition transform active:scale-95 flex flex-col items-center justify-center border-b-4 border-orange-800">
+              <span class="zh text-2xl">差不多</span>
+              <span class="text-xs text-orange-100 font-normal">chàbuduō</span>
+            </button>
+
+            <button onclick="checkBombAnswer('both')" class="bomb-opt-btn py-4 px-4 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-md transition transform active:scale-95 flex flex-col items-center justify-center border-b-4 border-emerald-800">
+              <span class="text-lg sm:text-xl">ใช้ได้ทั้งคู่</span>
+              <span class="text-xs text-emerald-100 font-normal">Both</span>
+            </button>
+          </div>
+
+          <!-- Instant Feedback & Explanation -->
+          <div id="bomb-feedback-box" class="hidden mt-4 p-4 rounded-2xl text-left animate-float-up">
+            <div class="flex items-start gap-3">
+              <span id="bomb-feedback-icon" class="text-2xl"></span>
+              <div class="flex-1">
+                <h4 id="bomb-feedback-title" class="font-bold text-base"></h4>
+                <p id="bomb-feedback-exp" class="text-sm mt-1 leading-relaxed"></p>
+              </div>
+            </div>
+            <div class="mt-4 text-right">
+              <button onclick="nextBombQuestion()" class="px-6 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-semibold text-sm shadow transition active:scale-95">
+                ข้อต่อไป ➔
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary Screen -->
+      <div id="bomb-end" class="hidden bg-white rounded-3xl p-6 sm:p-10 shadow-lg border border-slate-200 text-center space-y-6 animate-float-up">
+        <div id="bomb-badge-icon" class="text-6xl">🏆</div>
+        <div>
+          <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold">สรุปผลการกู้ระเบิด</span>
+          <h2 id="bomb-rank-title" class="text-2xl sm:text-3xl font-extrabold text-slate-800 mt-2">ปรมาจารย์ไวยากรณ์จีน!</h2>
+          <p id="bomb-rank-desc" class="text-slate-600 text-sm mt-1"></p>
+        </div>
+
+        <div class="bg-slate-50 rounded-2xl p-6 border border-slate-100 max-w-sm mx-auto">
+          <div class="text-sm text-slate-500 font-medium">คะแนนรวมของคุณ</div>
+          <div class="text-5xl font-black text-indigo-600 my-2">
+            <span id="bomb-final-score">0</span> <span class="text-xl text-slate-400 font-bold">/ 10</span>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row justify-center gap-3 pt-2">
+          <button onclick="startBombGame()" class="px-6 py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow transition active:scale-95">
+            🔄 เล่นอีกครั้ง (สุ่มสลับข้อ)
+          </button>
+          <button onclick="switchMode('sort')" class="px-6 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow transition active:scale-95">
+            ไปด่านต่อไป: เกมแยกกล่อง 🗂️
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== MODE 3: INTERACTIVE SORTING CHALLENGE ==================== -->
+    <section id="mode-sort" class="hidden animate-float-up space-y-5">
+      <div class="bg-white rounded-3xl p-5 shadow-sm border border-slate-200 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-bold text-slate-800">🗂️ เกมแยกกล่องไวยากรณ์</h2>
+          <p class="text-xs sm:text-sm text-slate-600 mt-0.5">
+            <strong>วิธีเล่น:</strong> แตะเลือกการ์ดประโยคด้านบน แล้วแตะลงในกล่องด้านล่าง (หรือลากวาง) ให้ถูกต้อง!
+          </p>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="px-4 py-2 rounded-xl bg-indigo-50 border border-indigo-100 text-indigo-700 font-bold text-sm">
+            สำเร็จ: <span id="sort-progress">0</span> / <span id="sort-total">9</span>
+          </div>
+          <button onclick="initSortGame()" class="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold transition" title="เริ่มใหม่">
+            🔄 รีเซ็ต
+          </button>
+        </div>
+      </div>
+
+      <!-- Feedback Banner for Sorting -->
+      <div id="sort-feedback" class="hidden p-3.5 rounded-2xl text-sm font-medium text-center transition-all"></div>
+
+      <!-- Cards Pool -->
+      <div id="sort-pool-container" class="bg-white/80 rounded-3xl p-5 border-2 border-dashed border-slate-300 min-h-[160px]">
+        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 text-center">
+          👇 การ์ดประโยคที่รอการจัดหมวดหมู่ (แตะเพื่อเลือกการ์ด)
+        </p>
+        <div id="sort-cards-pool" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+          <!-- Cards will be injected by JS -->
+        </div>
+      </div>
+
+      <!-- 3 Target Baskets -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+        
+        <!-- Basket 1: Only 几乎 -->
+        <div onclick="handleBasketClick('jihu')" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'jihu')"
+             class="sort-basket cursor-pointer bg-blue-50/90 hover:bg-blue-100/80 rounded-3xl p-4 border-2 border-blue-300 transition-all flex flex-col min-h-[180px]">
+          <div class="text-center pb-3 border-b border-blue-200">
+            <span class="inline-block px-2.5 py-0.5 rounded-full bg-blue-600 text-white text-xs font-bold mb-1">กล่องที่ 1</span>
+            <h3 class="text-xl font-black text-blue-800 zh">เฉพาะ 几乎 (jīhū)</h3>
+            <p class="text-xs text-blue-600">หน้าคำบอกความถี่ / ทั้งหมด</p>
+          </div>
+          <div id="basket-jihu" class="flex-1 pt-3 space-y-2"></div>
+        </div>
+
+        <!-- Basket 2: Only 差不多 -->
+        <div onclick="handleBasketClick('chabuduo')" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'chabuduo')"
+             class="sort-basket cursor-pointer bg-orange-50/90 hover:bg-orange-100/80 rounded-3xl p-4 border-2 border-orange-300 transition-all flex flex-col min-h-[180px]">
+          <div class="text-center pb-3 border-b border-orange-200">
+            <span class="inline-block px-2.5 py-0.5 rounded-full bg-orange-600 text-white text-xs font-bold mb-1">กล่องที่ 2</span>
+            <h3 class="text-xl font-black text-orange-800 zh">เฉพาะ 差不多 (chàbuduō)</h3>
+            <p class="text-xs text-orange-600">ท้ายประโยค / เปรียบเทียบ / ขยายนาม</p>
+          </div>
+          <div id="basket-chabuduo" class="flex-1 pt-3 space-y-2"></div>
+        </div>
+
+        <!-- Basket 3: Both -->
+        <div onclick="handleBasketClick('both')" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'both')"
+             class="sort-basket cursor-pointer bg-emerald-50/90 hover:bg-emerald-100/80 rounded-3xl p-4 border-2 border-emerald-300 transition-all flex flex-col min-h-[180px]">
+          <div class="text-center pb-3 border-b border-emerald-200">
+            <span class="inline-block px-2.5 py-0.5 rounded-full bg-emerald-600 text-white text-xs font-bold mb-1">กล่องที่ 3</span>
+            <h3 class="text-xl font-black text-emerald-800">ใช้ได้ทั้งคู่ (Both)</h3>
+            <p class="text-xs text-emerald-600">หน้าคำกริยา / ตัวเลขปริมาณ</p>
+          </div>
+          <div id="basket-both" class="flex-1 pt-3 space-y-2"></div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="text-center py-4 text-xs text-slate-400 border-t border-slate-200/60 mt-8">
+    สื่อการเรียนรู้ภาษาจีน Interactive • 几乎 (jīhū) vs 差不多 (chàbuduō)
+  </footer>
+
+  <!-- ==================== QR CODE MODAL FOR CANVA ==================== -->
+  <div id="qr-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 text-center space-y-4 animate-float-up">
+      <div class="flex justify-between items-center">
+        <h3 class="text-lg font-bold text-slate-800">📱 แชร์เกมลงสไลด์ Canva</h3>
+        <button onclick="closeQrModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold">✕</button>
+      </div>
+      
+      <p class="text-xs sm:text-sm text-slate-600">
+        ให้นักเรียนใช้มือถือสแกน QR Code นี้เพื่อเข้าเล่นเกมพร้อมกัน หรือแคปภาพ QR Code ด้านล่างไปแปะในสไลด์ Canva ได้เลย!
+      </p>
+
+      <!-- QR Code Container -->
+      <div class="bg-white p-4 rounded-2xl border-2 border-indigo-100 inline-block shadow-inner mx-auto">
+        <div id="qrcode-canvas" class="flex justify-center"></div>
+      </div>
+
+      <!-- URL Copy Box -->
+      <div class="flex items-center gap-2 bg-slate-100 p-2 rounded-xl border border-slate-200">
+        <input id="share-url-input" type="text" readonly class="bg-transparent text-xs text-slate-600 flex-1 outline-none px-2 truncate" />
+        <button onclick="copyShareUrl()" id="copy-url-btn" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shrink-0 transition">
+          คัดลอกลิงก์
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+  <script>
+    // ==========================================
+    // 1. WEB AUDIO API SOUND SYNTHESIZER
+    // ==========================================
+    let soundEnabled = true;
+    let audioCtx = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      document.getElementById('soundIcon').innerText = soundEnabled ? '🔊' : '🔇';
+    }
+
+    function playSound(type) {
+      if (!soundEnabled) return;
+      try {
+        initAudio();
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === 'tick') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(880, now);
+          gain.gain.setValueAtTime(0.05, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+          osc.start(now);
+          osc.stop(now + 0.06);
+        } else if (type === 'correct') {
+          // Happy ascending chime
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(523.25, now); // C5
+          osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+          osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+          gain.gain.setValueAtTime(0.18, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+          osc.start(now);
+          osc.stop(now + 0.45);
+        } else if (type === 'wrong') {
+          // Low buzzer / bomb boom
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(160, now);
+          osc.frequency.linearRampToValueAtTime(75, now + 0.35);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+          osc.start(now);
+          osc.stop(now + 0.4);
+        } else if (type === 'pop') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(600, now);
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+          osc.start(now);
+          osc.stop(now + 0.08);
+        }
+      } catch (e) {
+        // Ignore audio errors if blocked by browser policy
+      }
+    }
+
+    // ==========================================
+    // 2. NAVIGATION & TABS
+    // ==========================================
+    function switchMode(mode) {
+      playSound('pop');
+      // Hide all sections
+      ['cheatsheet', 'bomb', 'sort'].forEach(m => {
+        document.getElementById(`mode-${m}`).classList.add('hidden');
+        const tab = document.getElementById(`tab-${m}`);
+        tab.classList.remove('bg-white', 'text-indigo-700', 'shadow-sm');
+        tab.classList.add('text-slate-600');
+      });
+
+      // Stop bomb timer if leaving bomb mode
+      if (mode !== 'bomb' && bombTimerInterval) {
+        clearInterval(bombTimerInterval);
+      }
+
+      // Show selected section
+      document.getElementById(`mode-${mode}`).classList.remove('hidden');
+      const activeTab = document.getElementById(`tab-${mode}`);
+      activeTab.classList.add('bg-white', 'text-indigo-700', 'shadow-sm');
+      activeTab.classList.remove('text-slate-600');
+
+      if (mode === 'sort' && sortItemsState.length === 0) {
+        initSortGame();
+      }
+    }
+
+    // ==========================================
+    // 3. QUESTION BANK (BOMB QUIZ - 10 QUESTIONS)
+    // ==========================================
+    const bombQuestionsBank = [
+      {
+        q: "这两个苹果的大小______。",
+        py: "Zhè liǎng gè píngguǒ de dàxiǎo ______.",
+        th: "ขนาดของแอปเปิล 2 ลูกนี้พอๆ กัน",
+        ans: "chabuduo",
+        exp: "ช่องว่างอยู่ 'ท้ายประโยค' ทำหน้าที่เป็นคำคุณศัพท์ (ภาคแสดง) แปลว่า พอๆ กัน ใช้ได้เฉพาะ 差不多 เท่านั้น (几乎 วางท้ายประโยคไม่ได้)"
+      },
+      {
+        q: "他______每天都去图书馆看书。",
+        py: "Tā ______ měitiān dōu qù túshūguǎn kànshū.",
+        th: "เขาไปอ่านหนังสือที่ห้องสมุดเกือบทุกวัน",
+        ans: "jihu",
+        exp: "วางหน้าคำบอกความถี่ '每天' (ทุกวัน) เพื่อเน้นว่าเกือบทุกวัน ต้องใช้ 几乎"
+      },
+      {
+        q: "我______忘了今天是你的生日！",
+        py: "Wǒ ______ wàng le jīntiān shì nǐ de shēngrì!",
+        th: "ฉันเกือบลืมไปเลยว่าวันนี้เป็นวันเกิดเธอ!",
+        ans: "both",
+        exp: "วางหน้าคำกริยา '忘了' (ลืม) สามารถใช้ได้ทั้ง 几乎 และ 差不多 เลย!"
+      },
+      {
+        q: "我的汉语水平跟他______。",
+        py: "Wǒ de Hànyǔ shuǐpíng gēn tā ______.",
+        th: "ระดับภาษาจีนของฉันใกล้เคียงกับเขา",
+        ans: "chabuduo",
+        exp: "โครงสร้างเปรียบเทียบ 'A 跟 B 差不多' (A กับ B พอๆ กัน) และอยู่ท้ายประโยค ต้องใช้ 差不多"
+      },
+      {
+        q: "______所有人都知道了这件事。",
+        py: "______ suǒyǒu rén dōu zhīdào le zhè jiàn shì.",
+        th: "คนเกือบทั้งหมดรู้เรื่องนี้กันหมดแล้ว",
+        ans: "jihu",
+        exp: "วางหน้า '所有人' (ทุกคน/ทั้งหมด) เพื่อบอกว่าเกือบทั้งหมด ต้องใช้ 几乎"
+      },
+      {
+        q: "我们已经等了______两个小时了。",
+        py: "Wǒmen yǐjīng děng le ______ liǎng gè xiǎoshí le.",
+        th: "พวกเรารอมาเกือบ 2 ชั่วโมงแล้ว",
+        ans: "both",
+        exp: "วางหน้าคำบอกจำนวนเวลา '两个小时' (2 ชั่วโมง) สามารถใช้ได้ทั้ง 几乎 และ 差不多"
+      },
+      {
+        q: "今天的作业我______做完了。",
+        py: "Jīntiān de zuòyè wǒ ______ zuò wán le.",
+        th: "การบ้านของวันนี้ฉันทำเกือบเสร็จแล้ว",
+        ans: "both",
+        exp: "วางหน้ากริยา '做完' (ทำเสร็จ) สามารถใช้ได้ทั้งคู่ (几乎做完了 / 差不多做完了)"
+      },
+      {
+        q: "我跟姐姐的身高______。",
+        py: "Wǒ gēn jiějie de shēngāo ______.",
+        th: "ส่วนสูงของฉันกับพี่สาวพอๆ กัน",
+        ans: "chabuduo",
+        exp: "วางท้ายประโยคทำหน้าที่เป็นภาคแสดง บอกว่าส่วนสูงใกล้เคียงกัน ใช้ได้เฉพาะ 差不多"
+      },
+      {
+        q: "昨天晚上我______一夜没睡。",
+        py: "Zuótiān wǎnshang wǒ ______ yí yè méi shuì.",
+        th: "เมื่อคืนฉันเกือบจะไม่ได้นอนทั้งคืน",
+        ans: "jihu",
+        exp: "เน้นความรู้สึกเชิงลบหรือความเฉียดฉิวว่า 'เกือบทั้งคืน' มักนิยมใช้ 几乎 (几乎一夜没睡)"
+      },
+      {
+        q: "这双鞋跟那双鞋的价格______。",
+        py: "Zhè shuāng xié gēn nà shuāng xié de jiàgé ______.",
+        th: "ราคาของรองเท้าคู่นี้กับคู่นั้นพอๆ กัน",
+        ans: "chabuduo",
+        exp: "อยู่ท้ายประโยคเพื่อบอกว่าราคาใกล้เคียงกัน ต้องใช้ 差不多 เท่านั้น"
+      }
+    ];
+
+    let activeBombQuestions = [];
+    let currentBombIdx = 0;
+    let bombScore = 0;
+    let bombStreak = 0;
+    let bombTimeLeft = 15;
+    let bombTimerInterval = null;
+    let bombAnswered = false;
+
+    function startBombGame() {
+      playSound('pop');
+      // Shuffle questions
+      activeBombQuestions = [...bombQuestionsBank].sort(() => Math.random() - 0.5);
+      currentBombIdx = 0;
+      bombScore = 0;
+      bombStreak = 0;
+
+      document.getElementById('bomb-start').classList.add('hidden');
+      document.getElementById('bomb-end').classList.add('hidden');
+      document.getElementById('bomb-play').classList.remove('hidden');
+
+      loadBombQuestion();
+    }
+
+    function loadBombQuestion() {
+      bombAnswered = false;
+      const qData = activeBombQuestions[currentBombIdx];
+
+      document.getElementById('bomb-q-num').innerText = currentBombIdx + 1;
+      document.getElementById('bomb-score').innerText = bombScore;
+      document.getElementById('bomb-pinyin').innerText = qData.py;
+      document.getElementById('bomb-question').innerText = qData.q;
+      
+      // Reset Hint
+      const hintEl = document.getElementById('bomb-thai-hint');
+      hintEl.innerText = `แปล: "${qData.th}"`;
+      hintEl.classList.add('hidden');
+      document.getElementById('bomb-hint-btn').classList.remove('hidden');
+
+      // Reset Feedback & Enable Buttons
+      document.getElementById('bomb-feedback-box').classList.add('hidden');
+      document.querySelectorAll('.bomb-opt-btn').forEach(btn => {
+        btn.disabled = false;
+        btn.classList.remove('opacity-40', 'ring-4', 'ring-offset-2', 'ring-slate-800');
+      });
+
+      // Update Streak UI
+      const streakBadge = document.getElementById('bomb-streak-badge');
+      if (bombStreak >= 2) {
+        streakBadge.classList.remove('hidden');
+        document.getElementById('bomb-streak').innerText = bombStreak;
+      } else {
+        streakBadge.classList.add('hidden');
+      }
+
+      // Start 15s Timer
+      startBombTimer();
+    }
+
+    function startBombTimer() {
+      if (bombTimerInterval) clearInterval(bombTimerInterval);
+      bombTimeLeft = 15;
+      updateTimerVisuals();
+
+      bombTimerInterval = setInterval(() => {
+        bombTimeLeft--;
+        updateTimerVisuals();
+
+        if (bombTimeLeft <= 5 && bombTimeLeft > 0) {
+          playSound('tick');
+        }
+
+        if (bombTimeLeft <= 0) {
+          clearInterval(bombTimerInterval);
+          handleBombTimeout();
+        }
+      }, 1000);
+    }
+
+    function updateTimerVisuals() {
+      const timerText = document.getElementById('bomb-timer');
+      const progressBar = document.getElementById('bomb-progress-bar');
+      const timerBox = document.getElementById('bomb-timer-box');
+
+      timerText.innerText = bombTimeLeft;
+      const pct = (bombTimeLeft / 15) * 100;
+      progressBar.style.width = `${pct}%`;
+
+      if (bombTimeLeft <= 5) {
+        timerBox.classList.add('animate-pulse-fast', 'bg-red-600', 'text-white');
+        timerBox.classList.remove('bg-red-50', 'text-red-600');
+      } else {
+        timerBox.classList.remove('animate-pulse-fast', 'bg-red-600', 'text-white');
+        timerBox.classList.add('bg-red-50', 'text-red-600');
+      }
+    }
+
+    function toggleHint() {
+      playSound('pop');
+      document.getElementById('bomb-thai-hint').classList.remove('hidden');
+      document.getElementById('bomb-hint-btn').classList.add('hidden');
+    }
+
+    function handleBombTimeout() {
+      if (bombAnswered) return;
+      bombAnswered = true;
+      bombStreak = 0;
+      playSound('wrong');
+
+      const qData = activeBombQuestions[currentBombIdx];
+      disableBombButtons();
+      showBombFeedback(false, "💥 หมดเวลา! ระเบิดทำงานแล้ว!", qData.exp);
+    }
+
+    function checkBombAnswer(selected) {
+      if (bombAnswered) return;
+      bombAnswered = true;
+      clearInterval(bombTimerInterval);
+
+      const qData = activeBombQuestions[currentBombIdx];
+      const isCorrect = (selected === qData.ans);
+
+      disableBombButtons();
+
+      if (isCorrect) {
+        bombScore++;
+        bombStreak++;
+        document.getElementById('bomb-score').innerText = bombScore;
+        playSound('correct');
+        showBombFeedback(true, "✅ ตัดสายถูกเส้น! กู้ระเบิดสำเร็จ!", qData.exp);
+      } else {
+        bombStreak = 0;
+        playSound('wrong');
+        const card = document.getElementById('bomb-card');
+        card.classList.add('animate-shake');
+        setTimeout(() => card.classList.remove('animate-shake'), 450);
+
+        const ansLabel = qData.ans === 'jihu' ? '几乎 (jīhū)' : qData.ans === 'chabuduo' ? '差不多 (chàbuduō)' : 'ใช้ได้ทั้งคู่';
+        showBombFeedback(false, `💥 ตูม! ผิดเส้น (คำตอบที่ถูกคือ: ${ansLabel})`, qData.exp);
+      }
+    }
+
+    function disableBombButtons() {
+      document.querySelectorAll('.bomb-opt-btn').forEach(btn => {
+        btn.disabled = true;
+        btn.classList.add('opacity-50');
+      });
+    }
+
+    function showBombFeedback(isSuccess, title, explanation) {
+      const box = document.getElementById('bomb-feedback-box');
+      const icon = document.getElementById('bomb-feedback-icon');
+      const titleEl = document.getElementById('bomb-feedback-title');
+      const expEl = document.getElementById('bomb-feedback-exp');
+
+      box.classList.remove('hidden', 'bg-emerald-50', 'border-emerald-200', 'text-emerald-900', 'bg-red-50', 'border-red-200', 'text-red-900');
+      box.classList.add('border-2');
+
+      if (isSuccess) {
+        box.classList.add('bg-emerald-50', 'border-emerald-200', 'text-emerald-900');
+        icon.innerText = '🎉';
+      } else {
+        box.classList.add('bg-red-50', 'border-red-200', 'text-red-900');
+        icon.innerText = '💥';
+      }
+
+      titleEl.innerText = title;
+      expEl.innerText = explanation;
+    }
+
+    function nextBombQuestion() {
+      playSound('pop');
+      currentBombIdx++;
+      if (currentBombIdx < activeBombQuestions.length) {
+        loadBombQuestion();
+      } else {
+        finishBombGame();
+      }
+    }
+
+    function finishBombGame() {
+      document.getElementById('bomb-play').classList.add('hidden');
+      document.getElementById('bomb-end').classList.remove('hidden');
+      document.getElementById('bomb-final-score').innerText = bombScore;
+
+      const badgeIcon = document.getElementById('bomb-badge-icon');
+      const rankTitle = document.getElementById('bomb-rank-title');
+      const rankDesc = document.getElementById('bomb-rank-desc');
+
+      if (bombScore >= 8) {
+        badgeIcon.innerText = '👑';
+        rankTitle.innerText = 'ปรมาจารย์ไวยากรณ์จีน!';
+        rankDesc.innerText = 'สุดยอดมาก! คุณแยกความต่างระหว่าง 几乎 กับ 差不多 ได้อย่างเฉียบขาด';
+        if (typeof confetti === 'function') {
+          confetti({ particleCount: 90, spread: 70, origin: { y: 0.6 } });
+        }
+      } else if (bombScore >= 5) {
+        badgeIcon.innerText = '⚔️';
+        rankTitle.innerText = 'จอมยุทธ์ผู้เชี่ยวชาญ';
+        rankDesc.innerText = 'ทำได้ดีมาก! ทบทวนจุดที่พลาดอีกนิดเดียวก็จะสมบูรณ์แบบแล้ว';
+      } else {
+        badgeIcon.innerText = '🌱';
+        rankTitle.innerText = 'จอมยุทธ์ฝึกหัด';
+        rankDesc.innerText = 'ไม่ต้องเสียใจนะ ลองกลับไปดู "สรุปสูตรจำไว" แล้วมาแก้มือใหม่!';
+      }
+    }
+
+    // ==========================================
+    // 4. INTERACTIVE SORTING CHALLENGE (MODE 3)
+    // ==========================================
+    const sortCardsBank = [
+      { id: 's1', text: "______所有人都同意。", py: "______ suǒyǒu rén dōu tóngyì.", cat: "jihu", hint: "วางหน้า 所有人 (ทุกคน)" },
+      { id: 's2', text: "他______每天都迟到。", py: "Tā ______ měitiān dōu chídào.", cat: "jihu", hint: "วางหน้า 每天 (ทุกวัน)" },
+      { id: 's3', text: "我______忘了他的名字。", py: "Wǒ ______ wàng le tā de míngzi.", cat: "both", hint: "วางหน้าคำกริยา 忘了 (ลืม)" },
+      { id: 's4', text: "我们的年龄______。", py: "Wǒmen de niánlíng ______.", cat: "chabuduo", hint: "วางท้ายประโยค (อายุพอๆ กัน)" },
+      { id: 's5', text: "这件跟那件______。", py: "Zhè jiàn gēn nà jiàn ______.", cat: "chabuduo", hint: "เปรียบเทียบท้ายประโยค" },
+      { id: 's6', text: "等了______一个小时。", py: "Děng le ______ yí gè xiǎoshí.", cat: "both", hint: "วางหน้าจำนวนเวลา 1 ชั่วโมง" },
+      { id: 's7', text: "工作______完成了。", py: "Gōngzuò ______ wánchéng le.", cat: "both", hint: "วางหน้าคำกริยา 完成 (เสร็จ)" },
+      { id: 's8', text: "______没有人知道。", py: "______ méiyǒu rén zhīdào.", cat: "jihu", hint: "เน้นว่าเกือบไม่มีใครรู้เลย" },
+      { id: 's9', text: "两个人长得______。", py: "Liǎng gè rén zhǎng de ______.", cat: "chabuduo", hint: "บอกสภาพท้ายประโยค (หน้าตาคล้ายกัน)" }
+    ];
+
+    let sortItemsState = [];
+    let selectedSortCardId = null;
+    let sortedCount = 0;
+
+    function initSortGame() {
+      playSound('pop');
+      selectedSortCardId = null;
+      sortedCount = 0;
+      sortItemsState = [...sortCardsBank].sort(() => Math.random() - 0.5);
+
+      document.getElementById('sort-progress').innerText = '0';
+      document.getElementById('sort-total').innerText = sortItemsState.length;
+      document.getElementById('sort-feedback').classList.add('hidden');
+      
+      // Clear baskets
+      ['jihu', 'chabuduo', 'both'].forEach(cat => {
+        document.getElementById(`basket-${cat}`).innerHTML = '';
+      });
+
+      renderSortPool();
+    }
+
+    function renderSortPool() {
+      const pool = document.getElementById('sort-cards-pool');
+      pool.innerHTML = '';
+
+      sortItemsState.forEach(item => {
+        if (item.sorted) return;
+        const isSelected = selectedSortCardId === item.id;
+        const card = document.createElement('div');
+        card.id = `card-${item.id}`;
+        card.draggable = true;
+        card.ondragstart = (e) => {
+          selectedSortCardId = item.id;
+          e.dataTransfer.setData('text/plain', item.id);
+        };
+        card.onclick = () => selectSortCard(item.id);
+
+        card.className = `cursor-pointer p-3.5 rounded-2xl bg-white border-2 transition-all select-none shadow-sm ${
+          isSelected 
+            ? 'border-indigo-600 ring-4 ring-indigo-200 scale-[1.02] bg-indigo-50/40' 
+            : 'border-slate-200 hover:border-indigo-300'
+        }`;
+
+        card.innerHTML = `
+          <div class="zh font-bold text-base sm:text-lg text-slate-800">${item.text}</div>
+          <div class="text-xs text-slate-500 mt-0.5">${item.py}</div>
+        `;
+        pool.appendChild(card);
+      });
+
+      if (sortedCount === sortItemsState.length) {
+        pool.innerHTML = `
+          <div class="col-span-full text-center py-6 space-y-3">
+            <div class="text-4xl">🎊</div>
+            <h3 class="text-xl font-bold text-emerald-700">ยอดเยี่ยม! คุณแยกการ์ดครบทั้งหมดแล้ว!</h3>
+            <button onclick="initSortGame()" class="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-semibold text-sm shadow">
+              เล่นรอบใหม่อีกครั้ง 🔄
+            </button>
+          </div>
+        `;
+        if (typeof confetti === 'function') {
+          confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
+        }
+      }
+    }
+
+    function selectSortCard(id) {
+      playSound('pop');
+      selectedSortCardId = (selectedSortCardId === id) ? null : id;
+      renderSortPool();
+    }
+
+    function allowDrop(e) {
+      e.preventDefault();
+    }
+
+    function handleDrop(e, targetCat) {
+      e.preventDefault();
+      const cardId = e.dataTransfer.getData('text/plain') || selectedSortCardId;
+      if (cardId) {
+        validateSortMove(cardId, targetCat);
+      }
+    }
+
+    function handleBasketClick(targetCat) {
+      if (!selectedSortCardId) {
+        showSortMessage("⚠️ กรุณาแตะเลือกการ์ดประโยคด้านบนก่อน แล้วค่อยแตะลงกล่องนะครับ", "warning");
+        return;
+      }
+      validateSortMove(selectedSortCardId, targetCat);
+    }
+
+    function validateSortMove(cardId, targetCat) {
+      const item = sortItemsState.find(i => i.id === cardId);
+      if (!item || item.sorted) return;
+
+      if (item.cat === targetCat) {
+        // Correct!
+        playSound('correct');
+        item.sorted = true;
+        sortedCount++;
+        selectedSortCardId = null;
+
+        document.getElementById('sort-progress').innerText = sortedCount;
+
+        // Add mini badge to the target basket
+        const basketEl = document.getElementById(`basket-${targetCat}`);
+        const badge = document.createElement('div');
+        badge.className = "p-2.5 rounded-xl bg-white/90 border border-slate-200 shadow-xs text-xs animate-float-up";
+        badge.innerHTML = `
+          <div class="zh font-bold text-slate-800 text-sm">✅ ${item.text}</div>
+          <div class="text-slate-500 text-[11px] mt-0.5">${item.hint}</div>
+        `;
+        basketEl.appendChild(badge);
+
+        showSortMessage(`✅ ถูกต้อง! "${item.text}" — ${item.hint}`, "success");
+        renderSortPool();
+      } else {
+        // Wrong!
+        playSound('wrong');
+        const cardEl = document.getElementById(`card-${cardId}`);
+        if (cardEl) {
+          cardEl.classList.add('animate-shake', 'border-red-500');
+          setTimeout(() => cardEl.classList.remove('animate-shake', 'border-red-500'), 450);
+        }
+        showSortMessage(`❌ ยังไม่ตรงกล่องนะ! ลองสังเกตคำรอบๆ ช่องว่างดูอีกครั้ง`, "error");
+      }
+    }
+
+    function showSortMessage(msg, type) {
+      const fb = document.getElementById('sort-feedback');
+      fb.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-800', 'bg-red-100', 'text-red-800', 'bg-amber-100', 'text-amber-800');
+      
+      if (type === 'success') fb.classList.add('bg-emerald-100', 'text-emerald-800');
+      else if (type === 'error') fb.classList.add('bg-red-100', 'text-red-800');
+      else fb.classList.add('bg-amber-100', 'text-amber-800');
+
+      fb.innerText = msg;
+    }
+
+    // ==========================================
+    // 5. QR CODE MODAL FOR CANVA SLIDES
+    // ==========================================
+    let qrGenerated = false;
+
+    function openQrModal() {
+      playSound('pop');
+      const modal = document.getElementById('qr-modal');
+      modal.classList.remove('hidden');
+
+      const currentUrl = window.location.href;
+      document.getElementById('share-url-input').value = currentUrl;
+
+      if (!qrGenerated && typeof QRCode !== 'undefined') {
+        const container = document.getElementById('qrcode-canvas');
+        container.innerHTML = '';
+        new QRCode(container, {
+          text: currentUrl,
+          width: 190,
+          height: 190,
+          colorDark: "#1E293B",
+          colorLight: "#FFFFFF",
+          correctLevel: QRCode.CorrectLevel.M
+        });
+        qrGenerated = true;
+      }
+    }
+
+    function closeQrModal() {
+      playSound('pop');
+      document.getElementById('qr-modal').classList.add('hidden');
+    }
+
+    function copyShareUrl() {
+      const input = document.getElementById('share-url-input');
+      input.select();
+      input.setSelectionRange(0, 99999);
+      document.execCommand('copy');
+      
+      const btn = document.getElementById('copy-url-btn');
+      btn.innerText = 'คัดลอกแล้ว ✓';
+      setTimeout(() => btn.innerText = 'คัดลอกลิงก์', 2000);
+    }
+  </script>
+</body>
+</html>
